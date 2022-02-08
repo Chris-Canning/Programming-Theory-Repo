@@ -6,15 +6,20 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     public GameObject ballPrefab;
+    public GameObject enemyPrefab;
     //public Camera camera;
-    private GameObject ball;
     public TextMeshProUGUI scoreText;
     public int score;
+
+    private GameObject ball;
+    private GameObject enemy;
 
     // Start is called before the first frame update
     void Start()
     {
-        ball = Instantiate(ballPrefab, new Vector3(0, 1, 0), Quaternion.identity);
+        float rand = Random.Range(-3, 4);
+        ball = Instantiate(ballPrefab, new Vector3(0, 2, 0), Quaternion.identity);
+        enemy = Instantiate(enemyPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
     }
 
     // Update is called once per frame
@@ -22,7 +27,15 @@ public class GameManager : MonoBehaviour
     {
         if (ball == false)
         {
-            ball = Instantiate(ballPrefab, new Vector3(0, 1, 0), Quaternion.identity);
+            float rand = Random.Range(-3, 4);
+            ball = Instantiate(ballPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
+            score -= 10;
+            scoreText.text = "Score: " + score;
+        }
+        if (enemy == false)
+        {
+            float rand = Random.Range(-3, 4);
+            enemy = Instantiate(enemyPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
             score -= 10;
             scoreText.text = "Score: " + score;
         }

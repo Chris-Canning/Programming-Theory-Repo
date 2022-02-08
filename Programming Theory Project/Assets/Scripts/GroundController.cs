@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class GroundController : MonoBehaviour
 {
-    public float sensitivity = 200f;
+    [SerializeField] float sensitivity = 200f;
+    [SerializeField] float clampAngle = 30f;
 
     private float verticalRotation;
     private float horizontalRotation;
-    public float clampAngle = 30f;
-
 
     // Start is called before the first frame update
     void Start()

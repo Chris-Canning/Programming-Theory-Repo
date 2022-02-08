@@ -13,9 +13,22 @@ public class BallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.y < -100)
+        if (transform.position.y < -10)
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        if (collision.gameObject.CompareTag("ScoreSpot"))
+        {
+            Destroy(collision.gameObject);
+        }
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+             ;
         }
     }
 }

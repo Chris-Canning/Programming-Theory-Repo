@@ -13,7 +13,7 @@ public class GroundController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        verticalRotation = transform.localEulerAngles.x - 0;
+        verticalRotation = transform.localEulerAngles.x - 0.5f;
         horizontalRotation = transform.eulerAngles.y;
     }
 

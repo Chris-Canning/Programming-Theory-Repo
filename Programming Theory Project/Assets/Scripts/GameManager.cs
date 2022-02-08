@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        float rand = Random.Range(-3, 4);
+        float rand = Random.Range(-4, 5);
         ball = Instantiate(ballPrefab, new Vector3(0, 2, 0), Quaternion.identity);
         enemy = Instantiate(enemyPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
     }
@@ -27,17 +28,21 @@ public class GameManager : MonoBehaviour
     {
         if (ball == false)
         {
-            float rand = Random.Range(-3, 4);
+            float rand = Random.Range(-4, 5);
             ball = Instantiate(ballPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
             score -= 10;
             scoreText.text = "Score: " + score;
         }
         if (enemy == false)
         {
-            float rand = Random.Range(-3, 4);
+            float rand = Random.Range(-4, 5);
             enemy = Instantiate(enemyPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
             score -= 10;
             scoreText.text = "Score: " + score;
+            if(score < -50)
+            {
+                BackToTitle();
+            }
         }
 
         //float mouseScroll = Input.GetAxis("Mouse ScrollWheel");
@@ -46,5 +51,10 @@ public class GameManager : MonoBehaviour
         //    camera.transform.localPosition = new Vector3(camera.transform.localPosition.x, camera.transform.localPosition.y, camera.transform.localPosition.z + mouseScroll);
         //}
 
+    }
+
+    public void BackToTitle()
+    {
+        SceneManager.LoadScene(0);
     }
 }

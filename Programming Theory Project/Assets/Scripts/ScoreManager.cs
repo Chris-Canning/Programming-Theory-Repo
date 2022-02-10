@@ -16,8 +16,6 @@ public class ScoreManager : MonoBehaviour
     public int[] BestScore = new int[10];
     public bool IsNewScore;
 
-    public TMP_Text[] bestScoreText;
-
     private void Awake()
     {
         if (Instance != null)
@@ -127,6 +125,26 @@ public class ScoreManager : MonoBehaviour
         else
         {
             Debug.Log("No file to load from: " + Application.persistentDataPath + " " + BestScore[0] + " " + BestScorer[0]);
+            BestScore[0] = 55;
+            BestScorer[0] = "Vi";
+            BestScore[1] = 30;
+            BestScorer[1] = "Vi";
+            BestScore[2] = 30;
+            BestScorer[2] = "Milo";
+            BestScore[3] = 25;
+            BestScorer[3] = "Clagger";
+            BestScore[4] = 20;
+            BestScorer[4] = "Deckard";
+            BestScore[5] = 20;
+            BestScorer[5] = "Powder";
+            BestScore[6] = 15;
+            BestScorer[6] = "Vi";
+            BestScore[7] = 10;
+            BestScorer[7] = "Milo";
+            BestScore[8] = 10;
+            BestScorer[8] = "Clagger";
+            BestScore[9] = 5;
+            BestScorer[9] = "Powder";
 
         }
     }

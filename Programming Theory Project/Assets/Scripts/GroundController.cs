@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class GroundController : MonoBehaviour // INHERITANCE
 {
-    private float clampAngle = 30f;
+    private float clampAngle = 5f;
 
     private float verticalRotation;
     private float horizontalRotation;

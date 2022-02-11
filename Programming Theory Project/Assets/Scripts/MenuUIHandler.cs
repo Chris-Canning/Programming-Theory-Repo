@@ -31,15 +31,16 @@ public class MenuUIHandler : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
 
-        if (sM.PlayerName == "")
+        if (sM.PlayerName == "" || sM.PlayerName == null)
         {
             startButton.interactable = false;
         }
         else
         {
             nameField.text = sM.PlayerName;
+            startButton.interactable = true;
         }
-        if(sM.Duration != 0)
+        if (sM.Duration != 0)
         {
             durationSlider.value = sM.Duration;
         }

@@ -7,14 +7,15 @@ using System.IO;
 public class ScoreManager : MonoBehaviour
 {
 
-    public static ScoreManager Instance;
-    public string playerName;
-    public int Score;
-    public int Duration;
+    public static ScoreManager Instance { get; private set; } // ENCAPSULATION
 
-    public string[] BestScorer = new string[10];
-    public int[] BestScore = new int[10];
-    public bool IsNewScore;
+    public string PlayerName { get; private set; } // ENCAPSULATION
+    public int Score { get; private set; } // ENCAPSULATION
+    public int Duration { get; private set; } // ENCAPSULATION
+    public bool IsNewScore { get; private set; } // ENCAPSULATION
+
+    [SerializeField] string[] BestScorer = new string[10];
+    [SerializeField] int[] BestScore = new int[10];
 
     private void Awake()
     {
@@ -28,12 +29,83 @@ public class ScoreManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         Score = 0;
-        LoadBestScore();
+        LoadBestScore(); // ABSTRACTION
     }
 
-    public void UpdateScore(int score)
+    public void ResetScore() // ENCAPSULATION
+    {
+        Score = 0;
+    }
+
+    public void UpdateScore(int score) // ENCAPSULATION
     {
         Score += score;
+    }
+
+    public int GetBestScore()
+    {
+        return BestScore[0];
+    }
+
+    public string GetBestScorer()
+    {
+        return BestScorer[0];
+    }
+
+    public string GetBestScorerByIndex(int theIndex) // ENCAPSULATION
+    {
+        if(theIndex < 0 || theIndex > BestScorer.Length)
+        {
+            return "";
+        }
+        return BestScorer[theIndex];
+    }
+
+    public int GetBestScoreByIndex(int theIndex) // ENCAPSULATION
+    {
+        if (theIndex < 0 || theIndex > BestScore.Length)
+        {
+            return 0;
+        }
+        return BestScore[theIndex];
+    }
+
+    public void SetPlayerName(string name) // ENCAPSULATION
+    {
+        PlayerName = name;
+    }
+
+    public void SetDuration(int value) // ENCAPSULATION
+    {
+        Duration = value;
+    }
+
+    public bool IsBestScore()
+    {
+        if (Score > BestScore[0])
+        {
+            return true;
+        } else
+        {
+            return false;
+        }
+    }
+
+    public void SetIsNewScore(bool isNewScore)
+    {
+        IsNewScore = isNewScore;
+    }
+
+    public bool IsInBestScore()
+    {
+        if (Score > BestScore[9])
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
@@ -92,7 +164,7 @@ public class ScoreManager : MonoBehaviour
         Debug.Log("Saved to: " + Application.persistentDataPath + " " + BestScorer[0] + " : " + BestScore[0]);
     }
 
-    public void LoadBestScore()
+    public void LoadBestScore() // ABSTRACTION
     {
         string path = Application.persistentDataPath + "/savefile.json";
         if (File.Exists(path))
@@ -161,4 +233,94 @@ public class ScoreManager : MonoBehaviour
         
     }
 
+    public void UpdateNewScore()
+    {
+        if (Score > BestScore[9])
+        {
+            BestScore[9] = Score;
+            BestScorer[9] = PlayerName;
+
+            if (Score > BestScore[8])
+            {
+                BestScore[9] = BestScore[8];
+                BestScorer[9] = BestScorer[8];
+                BestScore[8] = Score;
+                BestScorer[8] = PlayerName;
+
+                if (Score > BestScore[7])
+                {
+                    BestScore[8] = BestScore[7];
+                    BestScorer[8] = BestScorer[7];
+                    BestScore[7] = Score;
+                    BestScorer[7] = PlayerName;
+
+                    if (Score > BestScore[6])
+                    {
+                        BestScore[7] = BestScore[6];
+                        BestScorer[7] = BestScorer[6];
+                        BestScore[6] = Score;
+                        BestScorer[6] = PlayerName;
+
+                        if (Score > BestScore[5])
+                        {
+                            BestScore[6] = BestScore[5];
+                            BestScorer[6] = BestScorer[5];
+                            BestScore[5] = Score;
+                            BestScorer[5] = PlayerName;
+
+                            if (Score > BestScore[4])
+                            {
+                                BestScore[5] = BestScore[4];
+                                BestScorer[5] = BestScorer[4];
+                                BestScore[4] = Score;
+                                BestScorer[4] = PlayerName;
+
+                                if (Score > BestScore[3])
+                                {
+                                    BestScore[4] = BestScore[3];
+                                    BestScorer[4] = BestScorer[3];
+                                    BestScore[3] = Score;
+                                    BestScorer[3] = PlayerName;
+
+                                    if (Score > BestScore[2])
+                                    {
+                                        BestScore[3] = BestScore[2];
+                                        BestScorer[3] = BestScorer[2];
+                                        BestScore[2] = Score;
+                                        BestScorer[2] = PlayerName;
+
+                                        if (Score > BestScore[1])
+                                        {
+                                            BestScore[2] = BestScore[1];
+                                            BestScorer[2] = BestScorer[1];
+                                            BestScore[1] = Score;
+                                            BestScorer[1] = PlayerName;
+
+                                            if (Score > BestScore[0])
+                                            {
+                                                BestScore[1] = BestScore[0];
+                                                BestScorer[1] = BestScorer[0];
+                                                BestScore[0] = Score;
+                                                BestScorer[0] = PlayerName;
+                                            }
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
 }

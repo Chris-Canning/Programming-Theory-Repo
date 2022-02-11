@@ -13,45 +13,48 @@ using UnityEditor;
 [DefaultExecutionOrder(1000)]
 public class MenuUIHandler : MonoBehaviour
 {
-    public Button startButton;
-    public TMP_InputField nameField;
-    public TMP_Text[] bestScoreNames;
-    public TMP_Text[] bestScores;
-    public TMP_Text durationText;
-    public Slider durationSlider;
-    float sleepTime = 0.2f;
-    public AudioSource aS;
+    [SerializeField] Button startButton;
+    [SerializeField] TMP_InputField nameField;
+    [SerializeField] TMP_Text[] bestScoreNames;
+    [SerializeField] TMP_Text[] bestScores;
+    [SerializeField] TMP_Text durationText;
+    [SerializeField] Slider durationSlider;
+
+    private float sleepTime = 0.2f;
+    private AudioSource audioSource;
+    private ScoreManager sM;
 
     // Start is called before the first frame update
     void Start()
     {
-        //aS = ScoreManager.Instance.GetComponent<AudioSource>();
+        sM = ScoreManager.Instance;
 
-        if (ScoreManager.Instance.playerName == "")
+        audioSource = GetComponent<AudioSource>();
+
+        if (sM.PlayerName == "")
         {
             startButton.interactable = false;
         }
         else
         {
-            nameField.text = ScoreManager.Instance.playerName;
+            nameField.text = sM.PlayerName;
         }
-        if(ScoreManager.Instance.Duration != 0)
+        if(sM.Duration != 0)
         {
-            durationSlider.value = ScoreManager.Instance.Duration;
+            durationSlider.value = sM.Duration;
         }
-        if (ScoreManager.Instance.IsNewScore)
+        if (sM.IsNewScore)
         {
-            //StartCoroutine(UpdateNewScore());
-            UpdateNewScore2();
+            sM.UpdateNewScore();
         }
         else
         {
-            Debug.Log("No new update: " + ScoreManager.Instance.Score);
+            Debug.Log("No new update: " + sM.Score);
         }
 
-        RefreshScores();
+        RefreshScores(); // ABSTRACTION
 
-        UpdateDuration();
+        UpdateDuration(); // ABSTRACTION
     }
 
     // Update is called once per frame
@@ -61,7 +64,7 @@ public class MenuUIHandler : MonoBehaviour
     }
     public void StartNew()
     {
-        if (ScoreManager.Instance.playerName != "")
+        if (sM.PlayerName != "")
         {
             SceneManager.LoadScene(1);
         }
@@ -69,7 +72,7 @@ public class MenuUIHandler : MonoBehaviour
 
     public void Exit()
     {
-        ScoreManager.Instance.SaveBestScore();
+        sM.SaveBestScore();
 
 #if UNITY_EDITOR         
         EditorApplication.ExitPlaymode();
@@ -81,8 +84,9 @@ public class MenuUIHandler : MonoBehaviour
     public void UpdateName()
     {
         Debug.Log("Name updated to: " + nameField.text);
-        ScoreManager.Instance.playerName = nameField.text;
-        if (ScoreManager.Instance.playerName == "")
+
+        sM.SetPlayerName(nameField.text);
+        if (sM.PlayerName == "")
         {
             startButton.interactable = false;
         }
@@ -92,25 +96,14 @@ public class MenuUIHandler : MonoBehaviour
         }
     }
 
-    public void UpdateDuration()
+    public void UpdateDuration() // ABSTRACTION
     {
-        ScoreManager.Instance.Duration = (int)durationSlider.value;
-        durationText.text = "Duration: " + ScoreManager.Instance.Duration + "(s)";
+        sM.SetDuration((int)durationSlider.value);
+        durationText.text = "Duration: " + sM.Duration + "(s)";
     }
 
-    void RefreshScores()
+    void RefreshScores() // ABSTRACTION
     {
-        //bestScoreText[0].text = "1.";
-        //bestScoreText[1].text = "2.";
-        //bestScoreText[2].text = "3.";
-        //bestScoreText[3].text = "4.";
-        //bestScoreText[4].text = "5.";
-        //bestScoreText[5].text = "6.";
-        //bestScoreText[6].text = "7.";
-        //bestScoreText[7].text = "8.";
-        //bestScoreText[8].text = "9.";
-        //bestScoreText[9].text = "10.";
-
         StartCoroutine(DelayedRefresh());
     }
 
@@ -118,279 +111,76 @@ public class MenuUIHandler : MonoBehaviour
     {
         yield return new WaitForSeconds(sleepTime);
 
-        if (ScoreManager.Instance.BestScorer[0] != "")
+        if (sM.GetBestScorerByIndex(0) != "")
         {
-            aS.Play();
-            bestScoreNames[0].text = ScoreManager.Instance.BestScorer[0];
-            bestScores[0].text = "" + ScoreManager.Instance.BestScore[0];
+            audioSource.Play();
+            bestScoreNames[0].text = sM.GetBestScorerByIndex(0);
+            bestScores[0].text = "" + sM.GetBestScoreByIndex(0);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[1] != "")
+        if (sM.GetBestScorerByIndex(1) != "")
         {
-            aS.Play();
-            bestScoreNames[1].text = ScoreManager.Instance.BestScorer[1];
-            bestScores[1].text = "" + ScoreManager.Instance.BestScore[1];
+            audioSource.Play();
+            bestScoreNames[1].text = sM.GetBestScorerByIndex(1);
+            bestScores[1].text = "" + sM.GetBestScoreByIndex(1);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[2] != "")
+        if (sM.GetBestScorerByIndex(2) != "")
         {
-            aS.Play();
-            bestScoreNames[2].text = ScoreManager.Instance.BestScorer[2];
-            bestScores[2].text = "" + ScoreManager.Instance.BestScore[2];
+            audioSource.Play();
+            bestScoreNames[2].text = sM.GetBestScorerByIndex(2);
+            bestScores[2].text = "" + sM.GetBestScoreByIndex(2);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[3] != "")
+        if (sM.GetBestScorerByIndex(3) != "")
         {
-            aS.Play();
-            bestScoreNames[3].text = ScoreManager.Instance.BestScorer[3];
-            bestScores[3].text = "" + ScoreManager.Instance.BestScore[3];
+            audioSource.Play();
+            bestScoreNames[3].text = sM.GetBestScorerByIndex(3);
+            bestScores[3].text = "" + sM.GetBestScoreByIndex(3);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[4] != "")
+        if (sM.GetBestScorerByIndex(4) != "")
         {
-            aS.Play();
-            bestScoreNames[4].text = ScoreManager.Instance.BestScorer[4];
-            bestScores[4].text = "" + ScoreManager.Instance.BestScore[4];
+            audioSource.Play();
+            bestScoreNames[4].text = sM.GetBestScorerByIndex(4);
+            bestScores[4].text = "" + sM.GetBestScoreByIndex(4);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[5] != "")
+        if (sM.GetBestScorerByIndex(5) != "")
         {
-            aS.Play();
-            bestScoreNames[5].text = ScoreManager.Instance.BestScorer[5];
-            bestScores[5].text = "" + ScoreManager.Instance.BestScore[5];
+            audioSource.Play();
+            bestScoreNames[5].text = sM.GetBestScorerByIndex(5);
+            bestScores[5].text = "" + sM.GetBestScoreByIndex(5);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[6] != "")
+        if (sM.GetBestScorerByIndex(6) != "")
         {
-            aS.Play();
-            bestScoreNames[6].text = ScoreManager.Instance.BestScorer[6];
-            bestScores[6].text = "" + ScoreManager.Instance.BestScore[6];
+            audioSource.Play();
+            bestScoreNames[6].text = sM.GetBestScorerByIndex(6);
+            bestScores[6].text = "" + sM.GetBestScoreByIndex(6);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[7] != "")
+        if (sM.GetBestScorerByIndex(7) != "")
         {
-            aS.Play();
-            bestScoreNames[7].text = ScoreManager.Instance.BestScorer[7];
-            bestScores[7].text = "" + ScoreManager.Instance.BestScore[7];
+            audioSource.Play();
+            bestScoreNames[7].text = sM.GetBestScorerByIndex(7);
+            bestScores[7].text = "" + sM.GetBestScoreByIndex(7);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[8] != "")
+        if (sM.GetBestScorerByIndex(8) != "")
         {
-            aS.Play();
-            bestScoreNames[8].text = ScoreManager.Instance.BestScorer[8];
-            bestScores[8].text = "" + ScoreManager.Instance.BestScore[8];
+            audioSource.Play();
+            bestScoreNames[8].text = sM.GetBestScorerByIndex(8);
+            bestScores[8].text = "" + sM.GetBestScoreByIndex(8);
             yield return new WaitForSeconds(sleepTime);
         }
-        if (ScoreManager.Instance.BestScorer[9] != "")
+        if (sM.GetBestScorerByIndex(9) != "")
         {
-            aS.Play();
-            bestScoreNames[9].text = ScoreManager.Instance.BestScorer[9];
-            bestScores[9].text = "" + ScoreManager.Instance.BestScore[9];
+            audioSource.Play();
+            bestScoreNames[9].text = sM.GetBestScorerByIndex(9);
+            bestScores[9].text = "" + sM.GetBestScoreByIndex(9);
             yield return new WaitForSeconds(sleepTime);
         }
     }
 
-    void UpdateNewScore2()
-    {
-        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[9])
-        {
-            ScoreManager.Instance.BestScore[9] = ScoreManager.Instance.Score;
-            ScoreManager.Instance.BestScorer[9] = ScoreManager.Instance.playerName;
-
-            if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[8])
-            {
-                ScoreManager.Instance.BestScore[9] = ScoreManager.Instance.BestScore[8];
-                ScoreManager.Instance.BestScorer[9] = ScoreManager.Instance.BestScorer[8];
-                ScoreManager.Instance.BestScore[8] = ScoreManager.Instance.Score;
-                ScoreManager.Instance.BestScorer[8] = ScoreManager.Instance.playerName;
-
-                if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[7])
-                {
-                    ScoreManager.Instance.BestScore[8] = ScoreManager.Instance.BestScore[7];
-                    ScoreManager.Instance.BestScorer[8] = ScoreManager.Instance.BestScorer[7];
-                    ScoreManager.Instance.BestScore[7] = ScoreManager.Instance.Score;
-                    ScoreManager.Instance.BestScorer[7] = ScoreManager.Instance.playerName;
-
-                    if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[6])
-                    {
-                        ScoreManager.Instance.BestScore[7] = ScoreManager.Instance.BestScore[6];
-                        ScoreManager.Instance.BestScorer[7] = ScoreManager.Instance.BestScorer[6];
-                        ScoreManager.Instance.BestScore[6] = ScoreManager.Instance.Score;
-                        ScoreManager.Instance.BestScorer[6] = ScoreManager.Instance.playerName;
-
-                        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[5])
-                        {
-                            ScoreManager.Instance.BestScore[6] = ScoreManager.Instance.BestScore[5];
-                            ScoreManager.Instance.BestScorer[6] = ScoreManager.Instance.BestScorer[5];
-                            ScoreManager.Instance.BestScore[5] = ScoreManager.Instance.Score;
-                            ScoreManager.Instance.BestScorer[5] = ScoreManager.Instance.playerName;
-
-                            if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[4])
-                            {
-                                ScoreManager.Instance.BestScore[5] = ScoreManager.Instance.BestScore[4];
-                                ScoreManager.Instance.BestScorer[5] = ScoreManager.Instance.BestScorer[4];
-                                ScoreManager.Instance.BestScore[4] = ScoreManager.Instance.Score;
-                                ScoreManager.Instance.BestScorer[4] = ScoreManager.Instance.playerName;
-
-                                if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[3])
-                                {
-                                    ScoreManager.Instance.BestScore[4] = ScoreManager.Instance.BestScore[3];
-                                    ScoreManager.Instance.BestScorer[4] = ScoreManager.Instance.BestScorer[3];
-                                    ScoreManager.Instance.BestScore[3] = ScoreManager.Instance.Score;
-                                    ScoreManager.Instance.BestScorer[3] = ScoreManager.Instance.playerName;
-
-                                    if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[2])
-                                    {
-                                        ScoreManager.Instance.BestScore[3] = ScoreManager.Instance.BestScore[2];
-                                        ScoreManager.Instance.BestScorer[3] = ScoreManager.Instance.BestScorer[2];
-                                        ScoreManager.Instance.BestScore[2] = ScoreManager.Instance.Score;
-                                        ScoreManager.Instance.BestScorer[2] = ScoreManager.Instance.playerName;
-
-                                        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[1])
-                                        {
-                                            ScoreManager.Instance.BestScore[2] = ScoreManager.Instance.BestScore[1];
-                                            ScoreManager.Instance.BestScorer[2] = ScoreManager.Instance.BestScorer[1];
-                                            ScoreManager.Instance.BestScore[1] = ScoreManager.Instance.Score;
-                                            ScoreManager.Instance.BestScorer[1] = ScoreManager.Instance.playerName;
-
-                                            if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[0])
-                                            {
-                                                ScoreManager.Instance.BestScore[1] = ScoreManager.Instance.BestScore[0];
-                                                ScoreManager.Instance.BestScorer[1] = ScoreManager.Instance.BestScorer[0];
-                                                ScoreManager.Instance.BestScore[0] = ScoreManager.Instance.Score;
-                                                ScoreManager.Instance.BestScorer[0] = ScoreManager.Instance.playerName;
-                                            }
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
-
-    IEnumerator UpdateNewScore()
-    {
-        yield return new WaitForSeconds(1);
-
-        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[9])
-        {
-            yield return new WaitForSeconds(sleepTime);
-            aS.Play();
-            ScoreManager.Instance.BestScore[9] = ScoreManager.Instance.Score;
-            ScoreManager.Instance.BestScorer[9] = ScoreManager.Instance.playerName;
-
-            if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[8])
-            {
-                yield return new WaitForSeconds(sleepTime);
-                aS.Play();
-                ScoreManager.Instance.BestScore[9] = ScoreManager.Instance.BestScore[8];
-                ScoreManager.Instance.BestScorer[9] = ScoreManager.Instance.BestScorer[8];
-                ScoreManager.Instance.BestScore[8] = ScoreManager.Instance.Score;
-                ScoreManager.Instance.BestScorer[8] = ScoreManager.Instance.playerName;
-
-                if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[7])
-                {
-                    yield return new WaitForSeconds(sleepTime);
-                    aS.Play();
-                    ScoreManager.Instance.BestScore[8] = ScoreManager.Instance.BestScore[7];
-                    ScoreManager.Instance.BestScorer[8] = ScoreManager.Instance.BestScorer[7];
-                    ScoreManager.Instance.BestScore[7] = ScoreManager.Instance.Score;
-                    ScoreManager.Instance.BestScorer[7] = ScoreManager.Instance.playerName;
-
-                    if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[6])
-                    {
-                        yield return new WaitForSeconds(sleepTime);
-                        aS.Play();
-                        ScoreManager.Instance.BestScore[7] = ScoreManager.Instance.BestScore[6];
-                        ScoreManager.Instance.BestScorer[7] = ScoreManager.Instance.BestScorer[6];
-                        ScoreManager.Instance.BestScore[6] = ScoreManager.Instance.Score;
-                        ScoreManager.Instance.BestScorer[6] = ScoreManager.Instance.playerName;
-
-                        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[5])
-                        {
-                            yield return new WaitForSeconds(sleepTime);
-                            aS.Play();
-                            ScoreManager.Instance.BestScore[6] = ScoreManager.Instance.BestScore[5];
-                            ScoreManager.Instance.BestScorer[6] = ScoreManager.Instance.BestScorer[5];
-                            ScoreManager.Instance.BestScore[5] = ScoreManager.Instance.Score;
-                            ScoreManager.Instance.BestScorer[5] = ScoreManager.Instance.playerName;
-
-                            if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[4])
-                            {
-                                yield return new WaitForSeconds(sleepTime);
-                                aS.Play();
-                                ScoreManager.Instance.BestScore[5] = ScoreManager.Instance.BestScore[4];
-                                ScoreManager.Instance.BestScorer[5] = ScoreManager.Instance.BestScorer[4];
-                                ScoreManager.Instance.BestScore[4] = ScoreManager.Instance.Score;
-                                ScoreManager.Instance.BestScorer[4] = ScoreManager.Instance.playerName;
-
-                                if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[3])
-                                {
-                                    yield return new WaitForSeconds(sleepTime);
-                                    aS.Play();
-                                    ScoreManager.Instance.BestScore[4] = ScoreManager.Instance.BestScore[3];
-                                    ScoreManager.Instance.BestScorer[4] = ScoreManager.Instance.BestScorer[3];
-                                    ScoreManager.Instance.BestScore[3] = ScoreManager.Instance.Score;
-                                    ScoreManager.Instance.BestScorer[3] = ScoreManager.Instance.playerName;
-
-                                    if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[2])
-                                    {
-                                        yield return new WaitForSeconds(sleepTime);
-                                        aS.Play();
-                                        ScoreManager.Instance.BestScore[3] = ScoreManager.Instance.BestScore[2];
-                                        ScoreManager.Instance.BestScorer[3] = ScoreManager.Instance.BestScorer[2];
-                                        ScoreManager.Instance.BestScore[2] = ScoreManager.Instance.Score;
-                                        ScoreManager.Instance.BestScorer[2] = ScoreManager.Instance.playerName;
-
-                                        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[1])
-                                        {
-                                            yield return new WaitForSeconds(sleepTime);
-                                            aS.Play();
-                                            ScoreManager.Instance.BestScore[2] = ScoreManager.Instance.BestScore[1];
-                                            ScoreManager.Instance.BestScorer[2] = ScoreManager.Instance.BestScorer[1];
-                                            ScoreManager.Instance.BestScore[1] = ScoreManager.Instance.Score;
-                                            ScoreManager.Instance.BestScorer[1] = ScoreManager.Instance.playerName;
-
-                                            if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[0])
-                                            {
-                                                yield return new WaitForSeconds(sleepTime);
-                                                aS.Play();
-                                                ScoreManager.Instance.BestScore[1] = ScoreManager.Instance.BestScore[0];
-                                                ScoreManager.Instance.BestScorer[1] = ScoreManager.Instance.BestScorer[0];
-                                                ScoreManager.Instance.BestScore[0] = ScoreManager.Instance.Score;
-                                                ScoreManager.Instance.BestScorer[0] = ScoreManager.Instance.playerName;
-                                            }
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                        }
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
 }

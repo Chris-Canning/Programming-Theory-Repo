@@ -6,43 +6,36 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject ballPrefab;
-    public GameObject enemyPrefab;
-    public GameObject[] scoreSpots;
+    [SerializeField] GameObject ballPrefab;
+    [SerializeField] GameObject enemyPrefab;
+    [SerializeField] GameObject[] scoreSpots;
 
-    //public Camera camera;
+    [SerializeField] TextMeshProUGUI BestScoreText;
+    [SerializeField] TextMeshProUGUI ScoreText;
+    [SerializeField] TextMeshProUGUI CountdownText;
+    [SerializeField] GameObject GameOverText;
 
-    public TextMeshProUGUI BestScoreText;
-    public TextMeshProUGUI ScoreText;
-    public TextMeshProUGUI CountdownText;
-    public GameObject GameOverText;
-
-    public AudioSource audioSource;
-    public AudioClip clip1;
-    public AudioClip clip2;
-    public AudioClip clip3;
-    public AudioClip clip4;
-    public AudioClip clip5;
+    [SerializeField] float timeRemaining;
 
     private bool m_GameOver = false;
-
     private GameObject ball;
     private GameObject enemy;
-
-    public float timeRemaining;
+    private ScoreManager sM;
 
     // Start is called before the first frame update
     void Start()
     {
-        ScoreManager.Instance.Score = 0;
+        sM = ScoreManager.Instance;
+
+        sM.ResetScore();
 
         float rand = Random.Range(-4, 5);
         ball = Instantiate(ballPrefab, new Vector3(0, 2, 0), Quaternion.identity);
         enemy = Instantiate(enemyPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
 
-        BestScoreText.text = "Best Score: " + ScoreManager.Instance.BestScorer[0] + " : " + ScoreManager.Instance.BestScore[0];
-        CountdownText.text = "Seconds Remaining: " + ScoreManager.Instance.Duration;
-        timeRemaining = ScoreManager.Instance.Duration;
+        BestScoreText.text = "Best Score: " + sM.GetBestScorer() + " : " + sM.GetBestScore();
+        CountdownText.text = "Seconds Remaining: " + sM.Duration;
+        timeRemaining = sM.Duration;
     }
 
     // Update is called once per frame
@@ -55,18 +48,25 @@ public class GameManager : MonoBehaviour
                 timeRemaining -= Time.deltaTime;
                 CountdownText.text = "Seconds Remaining: " + (int) timeRemaining;
             }
+            if (timeRemaining <= 0)
+            {
+                GameOver(); // ABSTRACTION
+            }
+
             if (ball == false)
             {
                 float rand = Random.Range(-4, 5);
                 ball = Instantiate(ballPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
                 UpdateScore(-10);
             }
+
             if (enemy == false)
             {
                 float rand = Random.Range(-4, 5);
                 enemy = Instantiate(enemyPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
                 UpdateScore(-10);
             }
+
             if (!scoreSpots[0].activeSelf &&
                 !scoreSpots[1].activeSelf &&
                 !scoreSpots[2].activeSelf &&
@@ -80,10 +80,6 @@ public class GameManager : MonoBehaviour
                 scoreSpots[4].SetActive(true);
             }
 
-            if (ScoreManager.Instance.Score < -50 || timeRemaining <= 0)
-            {
-                GameOver();
-            }
         }
         else // Game Over
         {
@@ -102,12 +98,12 @@ public class GameManager : MonoBehaviour
     {
         if (!m_GameOver)
         {
-            ScoreManager.Instance.UpdateScore(score);
-            ScoreText.text = ScoreManager.Instance.playerName + "'s Score: " + ScoreManager.Instance.Score;
+            sM.UpdateScore(score);
+            ScoreText.text = " " + sM.PlayerName + "'s Score: " + sM.Score;
         }
     }
 
-    public void GameOver()
+    public void GameOver() // ABSTRACTION
     {
         m_GameOver = true;
 
@@ -121,28 +117,19 @@ public class GameManager : MonoBehaviour
         }
 
         GameOverText.SetActive(true);
-        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[0])
+        if (sM.IsBestScore())
         {
-            //ScoreManager.Instance.IsNewMaxScore = true;
-            //ScoreManager.Instance.BestScore[0] = ScoreManager.Instance.Score;
-            //ScoreManager.Instance.BestScorer[0] = ScoreManager.Instance.playerName;
-            BestScoreText.text = "Best Score: " + ScoreManager.Instance.playerName + " : " + ScoreManager.Instance.Score;
+            BestScoreText.text = "Best Score: " + sM.PlayerName + " : " + sM.Score;
         }
-        if (ScoreManager.Instance.Score > ScoreManager.Instance.BestScore[9])
+        if (sM.IsInBestScore())
         {
-            ScoreManager.Instance.IsNewScore = true;
+            sM.SetIsNewScore(true);
         }
         else
         {
-            ScoreManager.Instance.IsNewScore = false;
+            sM.SetIsNewScore(false);
         }
     }
-
-    //float mouseScroll = Input.GetAxis("Mouse ScrollWheel");
-    //if (mouseScroll != 0f)
-    //{
-    //    camera.transform.localPosition = new Vector3(camera.transform.localPosition.x, camera.transform.localPosition.y, camera.transform.localPosition.z + mouseScroll);
-    //}
 
     public void BackToTitle()
     {

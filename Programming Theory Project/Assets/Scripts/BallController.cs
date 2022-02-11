@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
+    [SerializeField] AudioClip clip1;
+    [SerializeField] AudioClip clip2;
+    [SerializeField] AudioClip clip3;
+    [SerializeField] AudioClip clip4;
+
     private GameManager gM;
+    private AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
         gM = GameManager.FindObjectOfType<GameManager>();
+        audioSource = GetComponent<AudioSource>();
+
     }
 
     // Update is called once per frame
@@ -17,7 +25,6 @@ public class BallController : MonoBehaviour
     {
         if (transform.position.y < -10)
         {
-            //gM.audioSource.PlayOneShot(gM.clip4);
             Destroy(gameObject);
         }
     }
@@ -29,20 +36,20 @@ public class BallController : MonoBehaviour
         {
             collision.gameObject.SetActive(false);
             gM.UpdateScore(5);
-            gM.audioSource.PlayOneShot(gM.clip1);
+            audioSource.PlayOneShot(clip1);
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
             gM.UpdateScore(5);
-            gM.audioSource.PlayOneShot(gM.clip2);
+            audioSource.PlayOneShot(clip2);
         }
         if (collision.gameObject.CompareTag("Rope"))
         {
-            gM.audioSource.PlayOneShot(gM.clip3);
+            audioSource.PlayOneShot(clip3);
         }
         if (collision.gameObject.CompareTag("Floor"))
         {
-            gM.audioSource.PlayOneShot(gM.clip5);
+            audioSource.PlayOneShot(clip4);
         }
     }
 }

@@ -202,9 +202,9 @@ public class ScoreManager : MonoBehaviour
             BestScore[1] = 30;
             BestScorer[1] = "Vi";
             BestScore[2] = 30;
-            BestScorer[2] = "Milo";
+            BestScorer[2] = "Mylo";
             BestScore[3] = 25;
-            BestScorer[3] = "Clagger";
+            BestScorer[3] = "Claggor";
             BestScore[4] = 20;
             BestScorer[4] = "Deckard";
             BestScore[5] = 20;
@@ -212,9 +212,9 @@ public class ScoreManager : MonoBehaviour
             BestScore[6] = 15;
             BestScorer[6] = "Vi";
             BestScore[7] = 10;
-            BestScorer[7] = "Milo";
+            BestScorer[7] = "Mylo";
             BestScore[8] = 10;
-            BestScorer[8] = "Clagger";
+            BestScorer[8] = "Claggor";
             BestScore[9] = 5;
             BestScorer[9] = "Powder";
 

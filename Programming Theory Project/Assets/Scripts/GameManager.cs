@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     private GameObject enemy;
     private ScoreManager sM;
     private Camera BallCamera;
+    private bool cameraStatus;
 
     // Start is called before the first frame update
     void Start()
@@ -39,8 +40,9 @@ public class GameManager : MonoBehaviour
         CountdownText.text = "Seconds Remaining: " + sM.Duration;
         timeRemaining = sM.Duration;
 
+        cameraStatus = false;
         BallCamera = ball.GetComponentInChildren<Camera>();
-        BallCamera.enabled = false;
+        BallCamera.enabled = cameraStatus;
     }
 
     // Update is called once per frame
@@ -63,6 +65,9 @@ public class GameManager : MonoBehaviour
                 float rand = Random.Range(-4, 5);
                 ball = Instantiate(ballPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
                 UpdateScore(-10);
+
+                BallCamera = ball.GetComponentInChildren<Camera>();
+                BallCamera.enabled = cameraStatus;
             }
 
             if (enemy == false)
@@ -142,9 +147,15 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void Restart()
+    {
+        SceneManager.LoadScene(1);
+    }
+
     public void CameraToggle()
     {
-        BallCamera.enabled = !BallCamera.enabled;
-        Screen.SetActive(!Screen.activeSelf);
+        cameraStatus = !cameraStatus;
+        BallCamera.enabled = cameraStatus;
+        Screen.SetActive(cameraStatus);
     }
 }

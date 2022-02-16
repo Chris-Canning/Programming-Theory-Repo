@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI ScoreText;
     [SerializeField] TextMeshProUGUI CountdownText;
     [SerializeField] GameObject GameOverText;
+    [SerializeField] GameObject Screen;
 
     [SerializeField] float timeRemaining;
 
@@ -21,6 +22,8 @@ public class GameManager : MonoBehaviour
     private GameObject ball;
     private GameObject enemy;
     private ScoreManager sM;
+    private Camera BallCamera;
+    private bool cameraStatus;
 
     // Start is called before the first frame update
     void Start()
@@ -36,6 +39,10 @@ public class GameManager : MonoBehaviour
         BestScoreText.text = "Best Score: " + sM.GetBestScorer() + " : " + sM.GetBestScore();
         CountdownText.text = "Seconds Remaining: " + sM.Duration;
         timeRemaining = sM.Duration;
+
+        cameraStatus = false;
+        BallCamera = ball.GetComponentInChildren<Camera>();
+        BallCamera.enabled = cameraStatus;
     }
 
     // Update is called once per frame
@@ -58,6 +65,9 @@ public class GameManager : MonoBehaviour
                 float rand = Random.Range(-4, 5);
                 ball = Instantiate(ballPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
                 UpdateScore(-10);
+
+                BallCamera = ball.GetComponentInChildren<Camera>();
+                BallCamera.enabled = cameraStatus;
             }
 
             if (enemy == false)
@@ -135,5 +145,17 @@ public class GameManager : MonoBehaviour
     {
         GameOver();
         SceneManager.LoadScene(0);
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void CameraToggle()
+    {
+        cameraStatus = !cameraStatus;
+        BallCamera.enabled = cameraStatus;
+        Screen.SetActive(cameraStatus);
     }
 }

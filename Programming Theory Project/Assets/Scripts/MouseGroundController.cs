@@ -61,7 +61,7 @@ public class MouseGroundController : GroundController // INHERITANCE
     {
         float y = 0;
 
-        y = getYInput1();  // allows both mouse and arrow key control
+        //y = getYInput1();  // allows both mouse and arrow key control
 
         if (y == 0)
         {
@@ -83,7 +83,7 @@ public class MouseGroundController : GroundController // INHERITANCE
     {
         float x = 0;
 
-        x = getXInput1();  // allows both mouse and arrow key control
+        //x = getXInput1();  // allows both mouse and arrow key control
 
         if (x == 0)
         {

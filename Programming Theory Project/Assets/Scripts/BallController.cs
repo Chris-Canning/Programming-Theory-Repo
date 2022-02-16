@@ -17,7 +17,6 @@ public class BallController : MonoBehaviour
     {
         gM = GameManager.FindObjectOfType<GameManager>();
         audioSource = GetComponent<AudioSource>();
-
     }
 
     // Update is called once per frame

@@ -158,4 +158,5 @@ public class GameManager : MonoBehaviour
         BallCamera.enabled = cameraStatus;
         Screen.SetActive(cameraStatus);
     }
+
 }

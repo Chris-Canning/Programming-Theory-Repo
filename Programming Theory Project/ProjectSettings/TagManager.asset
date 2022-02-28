@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Rope
   - Floor
+  - Bullet
   layers:
   - Default
   - TransparentFX

@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
 
                 BallCamera = ball.GetComponentInChildren<Camera>();
                 BallCamera.enabled = cameraStatus;
+
             }
 
             if (enemy == false)

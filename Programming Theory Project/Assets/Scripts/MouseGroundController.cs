@@ -116,7 +116,7 @@ public class MouseGroundController : GroundController // INHERITANCE
         float y = 0;
 
         y = getYInput1();  // allows both mouse and arrow key control
-
+        
         if (y == 0)
         {
             if (Input.GetKey(KeyCode.UpArrow))
@@ -139,7 +139,7 @@ public class MouseGroundController : GroundController // INHERITANCE
         float x = 0;
 
         x = getXInput1();  // allows both mouse and arrow key control
-
+        
         if (x == 0)
         {
             if (Input.GetKey(KeyCode.LeftArrow))

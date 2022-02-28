@@ -25,9 +25,9 @@ public abstract class GroundController : MonoBehaviour // INHERITANCE
             transform.localRotation = Quaternion.Euler(-verticalRotation, 0f, horizontalRotation);
             firstTime = false;
         }
-
+        
         XAndY = GetKeyInput();
-
+        
         if(XAndY.y == 0f && XAndY.x == 0f && GyroSupported()) {
             GetGyroInput();
         }

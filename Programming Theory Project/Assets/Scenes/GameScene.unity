@@ -1799,7 +1799,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &785620754
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3463,7 +3463,7 @@ MonoBehaviour:
   ScoreText: {fileID: 1890909746}
   CountdownText: {fileID: 1500077114}
   GameOverText: {fileID: 745005617}
-  Screen: {fileID: 1487985710}
+  Screen: {fileID: 2014000366}
   timeRemaining: 0
 --- !u!4 &1353448495
 Transform:
@@ -3973,7 +3973,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1487985711
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5517,7 +5517,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -75, y: -74}
+  m_AnchoredPosition: {x: -75, y: -33.4}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2014000368

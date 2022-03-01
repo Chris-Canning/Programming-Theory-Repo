@@ -11,11 +11,21 @@ public class BallController : MonoBehaviour
     [SerializeField] float ballForce = 200;
     [SerializeField] float ballVelocity = 2;
     [SerializeField] ParticleSystem explosion;
+    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] float bulletVelocity = 20f;
+    [SerializeField] GameObject gun;
+    [SerializeField] GameObject front;
+    [SerializeField] GameObject lens;
 
     private GameManager gM;
     private AudioSource audioSource;
     private GameObject bullet;
     private Rigidbody ballRb;
+    private TextMesh text;
+    private int count;
+    private float timeRemaining = 0f;
+    private float spotTime = 10f;
+    private float elapsed;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +33,14 @@ public class BallController : MonoBehaviour
         gM = GameManager.FindObjectOfType<GameManager>();
         audioSource = GetComponent<AudioSource>();
         ballRb = GetComponent<Rigidbody>();
+        text = GetComponentInChildren<TextMesh>();
+        text.text = "";
+        timeRemaining = 0;
+        if (gameObject.CompareTag("Ball"))
+        {
+            gun.SetActive(false);
+            lens.SetActive(false);
+        }
     }
 
     // Update is called once per frame
@@ -34,6 +52,30 @@ public class BallController : MonoBehaviour
         }
 
         if (gameObject.CompareTag("Ball")) {
+            if (timeRemaining > 0)
+            {
+                timeRemaining -= Time.deltaTime;
+                text.text = ((int)timeRemaining).ToString();
+            }
+            if (timeRemaining <= 0)
+            {
+                text.text = "";
+                gun.SetActive(false);
+                lens.SetActive(false);
+                gM.CameraOff();
+            }
+
+            elapsed += Time.deltaTime;
+            if(elapsed >= 1f)
+            {
+                elapsed = elapsed % 1f;
+                if (timeRemaining > 0)
+                {
+                    bullet = Instantiate(bulletPrefab, front.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
+                    bullet.GetComponent<Rigidbody>().velocity = bulletVelocity * front.transform.forward;
+                }
+            }
+
             if (GetComponentInChildren<CameraController>().direction == "StationaryX")
             {
                 //ballRb.AddForce(transform.forward * ballForce * Time.deltaTime);
@@ -79,6 +121,13 @@ public class BallController : MonoBehaviour
             collision.gameObject.SetActive(false);
             gM.UpdateScore(5);
             audioSource.PlayOneShot(clip1);
+            if(gameObject.CompareTag("Ball"))
+            {
+                timeRemaining += spotTime;
+                gun.SetActive(true);
+                lens.SetActive(true);
+                gM.CameraOn();
+            }
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
@@ -96,6 +145,7 @@ public class BallController : MonoBehaviour
         if (gameObject.CompareTag("Enemy") && collision.gameObject.CompareTag("Bullet"))
         {
             explosion.Play();
+            Destroy(collision.gameObject);
             audioSource.PlayOneShot(clip2);
             gM.UpdateScore(1);
         }

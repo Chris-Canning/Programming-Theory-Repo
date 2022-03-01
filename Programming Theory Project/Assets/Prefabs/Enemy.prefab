@@ -132,11 +132,16 @@ MonoBehaviour:
   clip2: {fileID: 8300000, guid: cc7373af9f9fe5347bb053e02eb0b6f8, type: 3}
   clip3: {fileID: 8300000, guid: 91c24ecde82c3eb42be5c1a5f468cb9e, type: 3}
   clip4: {fileID: 8300000, guid: 864f776918aa55846a971ba0ed5722e1, type: 3}
+  clip5: {fileID: 8300000, guid: a5fd37ed23d534001a4d28750fa0fea1, type: 3}
+  clip6: {fileID: 8300000, guid: bb2e2714f962491428dcb0b38598b251, type: 3}
   ballForce: 200
   ballVelocity: 2
   explosion: {fileID: 6326551895036216890}
   bulletPrefab: {fileID: 6841788725249429042, guid: 226acfa66109e49c3b9dd70e3a337b6c, type: 3}
-  velocity: 20
+  bulletVelocity: 20
+  gun: {fileID: 0}
+  front: {fileID: 0}
+  lens: {fileID: 0}
 --- !u!82 &8857417477058622499
 AudioSource:
   m_ObjectHideFlags: 0

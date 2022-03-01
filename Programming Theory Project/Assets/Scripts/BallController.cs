@@ -8,6 +8,8 @@ public class BallController : MonoBehaviour
     [SerializeField] AudioClip clip2;
     [SerializeField] AudioClip clip3;
     [SerializeField] AudioClip clip4;
+    [SerializeField] AudioClip clip5;
+    [SerializeField] AudioClip clip6;
     [SerializeField] float ballForce = 200;
     [SerializeField] float ballVelocity = 2;
     [SerializeField] ParticleSystem explosion;
@@ -27,6 +29,8 @@ public class BallController : MonoBehaviour
     private float spotTime = 10f;
     private float elapsed;
 
+    private Animator ballAnimator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,12 +38,14 @@ public class BallController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         ballRb = GetComponent<Rigidbody>();
         text = GetComponentInChildren<TextMesh>();
+        ballAnimator = GetComponent<Animator>();
+
         text.text = "";
         timeRemaining = 0;
         if (gameObject.CompareTag("Ball"))
         {
-            gun.SetActive(false);
-            lens.SetActive(false);
+            //LensDown();
+            //GunIn();
         }
     }
 
@@ -60,9 +66,7 @@ public class BallController : MonoBehaviour
             if (timeRemaining <= 0)
             {
                 text.text = "";
-                gun.SetActive(false);
-                lens.SetActive(false);
-                gM.CameraOff();
+                LensDown();
             }
 
             elapsed += Time.deltaTime;
@@ -71,6 +75,8 @@ public class BallController : MonoBehaviour
                 elapsed = elapsed % 1f;
                 if (timeRemaining > 0)
                 {
+                    audioSource.PlayOneShot(clip5,0.5f);
+                    ballAnimator.SetTrigger("Fire");
                     bullet = Instantiate(bulletPrefab, front.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
                     bullet.GetComponent<Rigidbody>().velocity = bulletVelocity * front.transform.forward;
                 }
@@ -86,29 +92,39 @@ public class BallController : MonoBehaviour
                 ballRb.velocity = ballVelocity * transform.forward;
             }
 
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                //LensUp();
+                //timeRemaining += spotTime;
+            }
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                //timeRemaining = 0;
+
+            }
             if (Input.GetKey(KeyCode.Space))
             {
-                ballRb.AddForce(transform.forward * ballForce * Time.deltaTime);
+                ballRb.velocity = ballVelocity * transform.forward;
 
             }
             if (Input.GetKey(KeyCode.UpArrow))
             {
-                ballRb.AddForce(transform.forward * ballForce * Time.deltaTime);
+                //ballRb.AddForce(transform.forward * ballForce * Time.deltaTime);
 
             }
             if (Input.GetKey(KeyCode.DownArrow))
             {
-                ballRb.AddForce(transform.forward * -ballForce * Time.deltaTime);
+                //ballRb.AddForce(transform.forward * -ballForce * Time.deltaTime);
 
             }
             if (Input.GetKey(KeyCode.RightArrow))
             {
-                ballRb.AddForce(transform.right * ballForce * Time.deltaTime);
+                //ballRb.AddForce(transform.right * ballForce * Time.deltaTime);
 
             }
             if (Input.GetKey(KeyCode.LeftArrow))
             {
-                ballRb.AddForce(transform.right * -ballForce * Time.deltaTime);
+                //ballRb.AddForce(transform.right * -ballForce * Time.deltaTime);
 
             }
         }
@@ -124,9 +140,7 @@ public class BallController : MonoBehaviour
             if(gameObject.CompareTag("Ball"))
             {
                 timeRemaining += spotTime;
-                gun.SetActive(true);
-                lens.SetActive(true);
-                gM.CameraOn();
+                LensUp();
             }
         }
         if (collision.gameObject.CompareTag("Enemy"))
@@ -136,18 +150,33 @@ public class BallController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Rope"))
         {
-            audioSource.PlayOneShot(clip3);
+            audioSource.PlayOneShot(clip2,0.3f);
         }
         if (collision.gameObject.CompareTag("Floor"))
         {
-            audioSource.PlayOneShot(clip4);
+            audioSource.PlayOneShot(clip4,0.5f);
         }
         if (gameObject.CompareTag("Enemy") && collision.gameObject.CompareTag("Bullet"))
         {
             explosion.Play();
             Destroy(collision.gameObject);
-            audioSource.PlayOneShot(clip2);
+            audioSource.PlayOneShot(clip6,0.5f);
             gM.UpdateScore(1);
         }
     }
+
+    void LensUp()
+    {
+        //lens.SetActive(true);
+        gM.CameraOn();
+        ballAnimator.SetBool("LensUp", true);
+    }
+
+    void LensDown()
+    {
+        //lens.SetActive(false);
+        gM.CameraOff();
+        ballAnimator.SetBool("LensUp", false);
+    }
+
 }

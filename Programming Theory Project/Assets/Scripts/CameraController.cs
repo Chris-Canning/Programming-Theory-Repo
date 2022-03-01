@@ -7,15 +7,12 @@ public class CameraController : MonoBehaviour
     [SerializeField] BallController player;
     [SerializeField] float sensitivity = 300f;
     [SerializeField] float clampAngle = 20f;
-    [SerializeField] GameObject bulletPrefab;
-    [SerializeField] float velocity = 20f;
     [SerializeField] float keySensitivity = 200f;
 
     private float verticalRotation;
     private float horizontalRotation;
     private float mouseScroll;
-    GameObject bullet;
-    GameObject enemy;
+    private GameObject enemy;
 
     private Touch theTouch;
     private Vector2 touchStartPos;
@@ -29,7 +26,7 @@ public class CameraController : MonoBehaviour
     {
         verticalRotation = transform.localEulerAngles.x - 0;
         horizontalRotation = transform.eulerAngles.y;
-        StartCoroutine(FireBullet());
+        //StartCoroutine(FireBullet());
         enemy = GameObject.FindGameObjectWithTag("Enemy");
     }
 
@@ -41,19 +38,6 @@ public class CameraController : MonoBehaviour
         }
         Look1();
         Debug.DrawRay(transform.position, transform.forward * 2, Color.red);
-    }
-
-    public IEnumerator FireBullet()
-    {
-        //Debug.Log("Fired bullet");
-        while (true)
-        {
-            bullet = Instantiate(bulletPrefab, transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().velocity = velocity * transform.forward;
-
-            yield return new WaitForSeconds(1f);
-        }
-
     }
 
     void Look()

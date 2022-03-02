@@ -4425,8 +4425,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Now is the time to get on the scoreboard
 
-    Hit the target to collect
-    points
+    Move the blue ball with
+    your finger
 
     Be careful not to fall out of the ring'
   m_isRightToLeft: 0

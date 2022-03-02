@@ -10,25 +10,23 @@ public class BallController : MonoBehaviour
     [SerializeField] AudioClip clip4;
     [SerializeField] AudioClip clip5;
     [SerializeField] AudioClip clip6;
-    [SerializeField] float ballForce = 200;
     [SerializeField] float ballVelocity = 2;
+    [SerializeField] float ballForce = 100;
     [SerializeField] ParticleSystem explosion;
     [SerializeField] GameObject bulletPrefab;
     [SerializeField] float bulletVelocity = 20f;
-    [SerializeField] GameObject gun;
     [SerializeField] GameObject front;
-    [SerializeField] GameObject lens;
+    [SerializeField] float mouseSensitivity = 200f;
 
     private GameManager gM;
     private AudioSource audioSource;
     private GameObject bullet;
     private Rigidbody ballRb;
     private TextMesh text;
-    private int count;
     private float timeRemaining = 0f;
-    private float spotTime = 10f;
+    private float spotTime = 15f;
     private float elapsed;
-
+    private bool lensAnimUp;
     private Animator ballAnimator;
 
     // Start is called before the first frame update
@@ -42,16 +40,14 @@ public class BallController : MonoBehaviour
 
         text.text = "";
         timeRemaining = 0;
-        if (gameObject.CompareTag("Ball"))
-        {
-            //LensDown();
-            //GunIn();
-        }
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        float y = 0;
+        float x = 0;
+
         if (transform.position.y < -10)
         {
             Destroy(gameObject);
@@ -75,57 +71,58 @@ public class BallController : MonoBehaviour
                 elapsed = elapsed % 1f;
                 if (timeRemaining > 0)
                 {
-                    audioSource.PlayOneShot(clip5,0.5f);
-                    ballAnimator.SetTrigger("Fire");
-                    bullet = Instantiate(bulletPrefab, front.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
-                    bullet.GetComponent<Rigidbody>().velocity = bulletVelocity * front.transform.forward;
+                    if (lensAnimUp)
+                    {
+                        explosion.Play();
+                        audioSource.PlayOneShot(clip5, 0.5f);
+                        ballAnimator.SetTrigger("Fire");
+                        bullet = Instantiate(bulletPrefab, front.transform.position + new Vector3(0f, 0f, 0f), Quaternion.identity);
+                        bullet.GetComponent<Rigidbody>().velocity = bulletVelocity * front.transform.forward;
+                    }
                 }
             }
 
-            if (GetComponentInChildren<CameraController>().direction == "StationaryX")
-            {
-                //ballRb.AddForce(transform.forward * ballForce * Time.deltaTime);
-                ballRb.velocity = ballVelocity * transform.forward;
-            }
-            if (Input.touchCount > 1)
-            {
-                ballRb.velocity = ballVelocity * transform.forward;
-            }
+            y = getYInput1();
+            x = getXInput1();
 
-            if (Input.GetKeyDown(KeyCode.G))
+            //if (Input.touchCount > 1)
+            //{
+            //    ballRb.velocity = ballVelocity * transform.forward;
+            //}
+
+            if (Input.GetKeyDown(KeyCode.F))
             {
                 //LensUp();
                 //timeRemaining += spotTime;
             }
-            if (Input.GetKeyDown(KeyCode.H))
+            if (Input.GetKeyDown(KeyCode.G))
             {
                 //timeRemaining = 0;
-
             }
-            if (Input.GetKey(KeyCode.Space))
+
+            if (Input.GetKey(KeyCode.B) || Input.GetAxis("Mouse ScrollWheel") < 0f)
+            {
+                ballRb.velocity = -ballVelocity * transform.forward;
+            }
+            if (Input.GetKey(KeyCode.Space) || Input.GetAxis("Mouse ScrollWheel") > 0f)
             {
                 ballRb.velocity = ballVelocity * transform.forward;
-
             }
-            if (Input.GetKey(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.UpArrow) || y > 0)
             {
-                //ballRb.AddForce(transform.forward * ballForce * Time.deltaTime);
-
+                ballRb.AddForce(Vector3.forward * ballForce * Time.deltaTime);
             }
-            if (Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.DownArrow) || y < 0)
             {
-                //ballRb.AddForce(transform.forward * -ballForce * Time.deltaTime);
-
+                ballRb.AddForce(Vector3.forward * -ballForce * Time.deltaTime);
             }
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.RightArrow) || x < 0)
             {
-                //ballRb.AddForce(transform.right * ballForce * Time.deltaTime);
-
+                ballRb.AddForce(Vector3.right * ballForce * Time.deltaTime);
             }
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow) || x > 0)
             {
-                //ballRb.AddForce(transform.right * -ballForce * Time.deltaTime);
-
+                ballRb.AddForce(Vector3.right * -ballForce * Time.deltaTime);
             }
         }
     }
@@ -145,7 +142,7 @@ public class BallController : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            gM.UpdateScore(5);
+            //gM.UpdateScore(5);
             audioSource.PlayOneShot(clip2);
         }
         if (collision.gameObject.CompareTag("Rope"))
@@ -167,16 +164,40 @@ public class BallController : MonoBehaviour
 
     void LensUp()
     {
-        //lens.SetActive(true);
         gM.CameraOn();
         ballAnimator.SetBool("LensUp", true);
     }
 
     void LensDown()
     {
-        //lens.SetActive(false);
         gM.CameraOff();
         ballAnimator.SetBool("LensUp", false);
+    }
+
+    void LensNowUp()
+    {
+        lensAnimUp = true;
+    }
+
+    void LensNowDown()
+    {
+        lensAnimUp = false;
+    }
+
+    // Mouse Input Y
+    public float getYInput1()
+    {
+        float mouseVertical = Input.GetAxis("Mouse Y") * mouseSensitivity;
+
+        return mouseVertical;
+    }
+
+    // Mouse Input X
+    public float getXInput1()
+    {
+        float mouseHorizontal = -Input.GetAxis("Mouse X") * mouseSensitivity;
+
+        return mouseHorizontal;
     }
 
 }

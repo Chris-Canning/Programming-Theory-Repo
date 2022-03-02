@@ -8,6 +8,7 @@ public class MouseGroundController : GroundController // INHERITANCE
 {
     [SerializeField] float mouseSensitivity = 200f;
     [SerializeField] float keySensitivity = 10f;
+    [SerializeField] float accelSensitivity = 50f;
     [SerializeField] Vector2 xAndYVal;
     [SerializeField] Vector2 rotation;
     [SerializeField] Vector2 adjusted;
@@ -98,7 +99,7 @@ public class MouseGroundController : GroundController // INHERITANCE
     //Acceleration Y Input
     public float getYInput3()
     {
-        float mouseVertical = Input.acceleration.y;// * tiltSensitivity;
+        float mouseVertical = Input.acceleration.y * accelSensitivity;
 
         return mouseVertical;
     }
@@ -106,7 +107,7 @@ public class MouseGroundController : GroundController // INHERITANCE
     //Acceleration X Input
     public float getXInput3()
     {
-        float mouseHorizontal = -Input.acceleration.x;// * tiltSensitivity;
+        float mouseHorizontal = -Input.acceleration.x * accelSensitivity;
 
         return mouseHorizontal;
     }
@@ -115,8 +116,12 @@ public class MouseGroundController : GroundController // INHERITANCE
     {
         float y = 0;
 
-        y = getYInput1();  // allows both mouse and arrow key control
-        
+        if (!gyroToggle)
+        {
+            y = getYInput1();  // allows both mouse and arrow key control
+            //y = getYInput3();  // allows both acceleration and arrow key control
+        }
+
         if (y == 0)
         {
             if (Input.GetKey(KeyCode.UpArrow))
@@ -138,8 +143,11 @@ public class MouseGroundController : GroundController // INHERITANCE
     {
         float x = 0;
 
-        x = getXInput1();  // allows both mouse and arrow key control
-        
+        if(!gyroToggle) {
+            x = getXInput1();  // allows both mouse and arrow key control
+            //x = getXInput3();  // allows both acceleration and arrow key control
+        }
+
         if (x == 0)
         {
             if (Input.GetKey(KeyCode.LeftArrow))

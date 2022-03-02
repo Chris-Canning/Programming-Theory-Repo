@@ -6,8 +6,9 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] BallController player;
     [SerializeField] float sensitivity = 300f;
-    [SerializeField] float clampAngle = 20f;
+    [SerializeField] float clampAngle = 0f;
     [SerializeField] float keySensitivity = 200f;
+    [SerializeField] GameObject front;
 
     private float verticalRotation;
     private float horizontalRotation;
@@ -26,11 +27,10 @@ public class CameraController : MonoBehaviour
     {
         verticalRotation = transform.localEulerAngles.x - 0;
         horizontalRotation = transform.eulerAngles.y;
-        //StartCoroutine(FireBullet());
         enemy = GameObject.FindGameObjectWithTag("Enemy");
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(enemy == false)
         {
@@ -56,7 +56,7 @@ public class CameraController : MonoBehaviour
         mouseScroll = Input.GetAxis("Mouse ScrollWheel");
         if(mouseScroll != 0f)
         {
-            transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z + mouseScroll);
+            //transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, transform.localPosition.z + mouseScroll);
         }
     }
 
@@ -64,33 +64,25 @@ public class CameraController : MonoBehaviour
     {
         float y = 0;
         float x = 0;
-        string dir;
 
-        dir = GetTouch();
-
-        if (Input.GetKey(KeyCode.UpArrow) || dir == "Up")
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             y = Vector3.up.y;
         }
 
-        if (Input.GetKey(KeyCode.DownArrow) || dir == "Down")
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             y = Vector3.down.y;
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow) || dir == "Left")
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             x = Vector3.left.x;
         }
 
-        if (Input.GetKey(KeyCode.RightArrow) || dir == "Right")
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             x = Vector3.right.x;
-        }
-        if (dir == "Tapped" || dir == "None")
-        {
-            x = 0;
-            y = 0;
         }
 
         verticalRotation += y * Time.deltaTime * keySensitivity;
@@ -104,7 +96,7 @@ public class CameraController : MonoBehaviour
 
         if (enemy)
         {
-            posA = transform.position;
+            posA = front.transform.position;
             posB = enemy.transform.position;
             direct = posB - posA;
             enemyAngle = direct;

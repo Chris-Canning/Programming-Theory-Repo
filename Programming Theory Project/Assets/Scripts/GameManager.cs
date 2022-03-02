@@ -96,11 +96,11 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(1);
+                //SceneManager.LoadScene(1);
             }
             if (Input.GetKeyDown(KeyCode.X))
             {
-                SceneManager.LoadScene(0);
+                //SceneManager.LoadScene(0);
             }
         }
     }

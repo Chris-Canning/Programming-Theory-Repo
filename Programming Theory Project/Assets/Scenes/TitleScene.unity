@@ -4423,10 +4423,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Work together to get on the scoreboard
+  m_text: 'Now is the time to get on the scoreboard
 
-    Tilt the floor to help direct
-    the players
+    Hit the target to collect
+    points
 
     Be careful not to fall out of the ring'
   m_isRightToLeft: 0

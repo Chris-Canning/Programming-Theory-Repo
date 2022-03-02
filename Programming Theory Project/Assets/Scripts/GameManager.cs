@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         sM.ResetScore();
 
         float rand = Random.Range(-4, 5);
-        ball = Instantiate(ballPrefab, new Vector3(0, 2, 0), Quaternion.identity);
+        ball = Instantiate(ballPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
         enemy = Instantiate(enemyPrefab, new Vector3(rand, 2, rand), Quaternion.identity);
 
         BestScoreText.text = "Best Score: " + sM.GetBestScorer() + " : " + sM.GetBestScore();
@@ -96,11 +96,11 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                SceneManager.LoadScene(1);
+                //SceneManager.LoadScene(1);
             }
             if (Input.GetKeyDown(KeyCode.X))
             {
-                SceneManager.LoadScene(0);
+                //SceneManager.LoadScene(0);
             }
         }
     }

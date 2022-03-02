@@ -26,10 +26,10 @@ public abstract class GroundController : MonoBehaviour // INHERITANCE
             firstTime = false;
         }
         
-        XAndY = GetKeyInput();
+        //XAndY = GetKeyInput();
         
         if(XAndY.y == 0f && XAndY.x == 0f && GyroSupported()) {
-            GetGyroInput();
+            //GetGyroInput();
         }
     }
 

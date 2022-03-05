@@ -329,10 +329,13 @@ MonoBehaviour:
   clip5: {fileID: 8300000, guid: 6739c01659ad96d47987f4ddee226b36, type: 3}
   clip6: {fileID: 8300000, guid: bb2e2714f962491428dcb0b38598b251, type: 3}
   ballVelocity: 2
+  ballForce: 100
   explosion: {fileID: 1736944284540792654}
   bulletPrefab: {fileID: 6841788725249429042, guid: 226acfa66109e49c3b9dd70e3a337b6c, type: 3}
   bulletVelocity: 30
   front: {fileID: 4869224344851246343}
+  mouseSensitivity: 200
+  upForce: 4000
 --- !u!82 &7075062309487901815
 AudioSource:
   m_ObjectHideFlags: 0

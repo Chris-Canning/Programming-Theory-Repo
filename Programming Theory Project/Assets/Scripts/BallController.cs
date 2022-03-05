@@ -17,6 +17,7 @@ public class BallController : MonoBehaviour
     [SerializeField] float bulletVelocity = 20f;
     [SerializeField] GameObject front;
     [SerializeField] float mouseSensitivity = 200f;
+    [SerializeField] float upForce = 2000;
 
     private GameManager gM;
     private AudioSource audioSource;
@@ -54,6 +55,13 @@ public class BallController : MonoBehaviour
         }
 
         if (gameObject.CompareTag("Ball")) {
+
+            if (transform.position.y >= 0)
+            {
+                Vector3 origin = Camera.main.transform.position;
+                Camera.main.transform.position = new Vector3(origin.x, 6f + transform.position.y, -15f - transform.position.y);
+            }
+
             if (timeRemaining > 0)
             {
                 timeRemaining -= Time.deltaTime;
@@ -100,11 +108,16 @@ public class BallController : MonoBehaviour
                 //timeRemaining = 0;
             }
 
-            if (Input.GetKey(KeyCode.B) || Input.GetAxis("Mouse ScrollWheel") < 0f)
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                ballRb.AddForce(Vector3.up * upForce * Time.deltaTime);
+            }
+
+            if (Input.GetKey(KeyCode.V) || Input.GetAxis("Mouse ScrollWheel") < 0f)
             {
                 ballRb.velocity = -ballVelocity * transform.forward;
             }
-            if (Input.GetKey(KeyCode.Space) || Input.GetAxis("Mouse ScrollWheel") > 0f)
+            if (Input.GetKey(KeyCode.B) || Input.GetAxis("Mouse ScrollWheel") > 0f)
             {
                 ballRb.velocity = ballVelocity * transform.forward;
             }
